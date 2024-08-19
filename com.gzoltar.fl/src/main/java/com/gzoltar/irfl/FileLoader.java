@@ -14,29 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.scrapper;
+package com.gzoltar.irfl;
 
-
-
-import com.gzoltar.irfl.BugReport;
-
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class SourceForgeScrapper extends WebScrapper {
-
-    private static final String TITLE_CLASS = "dark title";
-    private static final String DESCRIPTION_ID = "markdown_content";
-
-    public SourceForgeScrapper(String url) throws IOException {
-        super(url);
-    }
-
-    @Override
-    public BugReport getBugReport() {
-        String title = extractTextByClass(TITLE_CLASS).get(0);
-        List<String> description = extractParagraphsByClass(DESCRIPTION_ID);
-
-        return new BugReport(title, description, doc.location());
+public class FileLoader {
+    public static List<String> loadFileByLine(String path) throws FileNotFoundException {
+        File file = new File(path);
+        List<String> lines = new ArrayList<>();
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                lines.add(line);
+            }
+        }
+        return lines;
     }
 }
