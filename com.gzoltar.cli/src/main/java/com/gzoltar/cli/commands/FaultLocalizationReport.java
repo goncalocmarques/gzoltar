@@ -71,6 +71,15 @@ public class FaultLocalizationReport extends AbstractReport {
       metaVar = "<formatter>", required = false)
   private String formatter = ReportFormatter.TXT.name();
 
+  @Option(name = "--irfl", usage = "fault localization report formatter (use ':' to define more than one formatter)",
+          metaVar = "<irfl>", required = false)
+  private String irfl = null;
+
+  @Option(name = "--bugreport", usage = "bug report link",
+          metaVar = "<bugreport>", required = false)
+  private String bugreport = null;
+
+
   /**
    * {@inheritDoc}
    */
@@ -98,6 +107,13 @@ public class FaultLocalizationReport extends AbstractReport {
     this.agentConfigs.setInclDeprecatedMethods(this.inclDeprecatedMethods);
     this.agentConfigs.setIncludes(this.includes);
     this.agentConfigs.setExcludes(this.excludes);
+
+    if(this.irfl != null && this.bugreport == null) {
+      throw new Exception("To use IRFL ranking you must provide a bug report url!");
+    }
+
+    this.agentConfigs.setIRFLCombiner(this.irfl);
+    this.agentConfigs.setBugReportLink(this.bugreport);
 
     final ConfigFaultLocalizationFamily configFlFamily = new ConfigFaultLocalizationFamily();
 

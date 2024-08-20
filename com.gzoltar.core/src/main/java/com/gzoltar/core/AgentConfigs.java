@@ -155,6 +155,12 @@ public final class AgentConfigs {
 
   public static final InstrumentationLevel DEFAULT_INSTRUMENTATION_LEVEL = InstrumentationLevel.FULL;
 
+  public static final String BUGREPORT_KEY = "bugreport";
+  public static final String DEFAULT_BUGREPORTFILE = null;
+
+  public static final String IRFL_KEY = "irfl";
+  public static final String DEFAULT_IRFL = null;
+
   private final Map<String, String> configs;
 
   private static final Collection<String> VALID_CONFIGS =
@@ -492,6 +498,42 @@ public final class AgentConfigs {
    */
   public void setInstrumentationLevel(final InstrumentationLevel instrumentationLevel) {
     this.setConfig(INSTRUMENTATION_LEVEL_KEY, instrumentationLevel.name());
+  }
+
+  /**
+   * Gets which method to use in order to combine SBL and IRFL rankings.
+   *
+   * @return irflCombiner
+   */
+  public String getIRFLCombiner() {
+    return this.getConfig(IRFL_KEY, DEFAULT_IRFL);
+  }
+
+  /**
+   * Sets which method to use in order to combine SBL and IRFL rankings.
+   *
+   * @param irflCombiner
+   */
+  public void setIRFLCombiner(final String irflCombiner) {
+    this.setConfig(IRFL_KEY, irflCombiner);
+  }
+
+  /**
+   * Gets the bug report link to compute IRFL ranking.
+   *
+   * @return bug report link
+   */
+  public String getBugReport() {
+    return this.getConfig(BUGREPORT_KEY, DEFAULT_BUGREPORTFILE);
+  }
+
+  /**
+   * Sets the bug report link to compute IRFL ranking.
+   *
+   * @param bugReportLink
+   */
+  public void setBugReportLink(final String bugReportLink) {
+    this.setConfig(BUGREPORT_KEY, bugReportLink);
   }
 
   /**

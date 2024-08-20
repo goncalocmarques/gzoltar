@@ -65,6 +65,9 @@ public class FaultLocalization {
 
     this.fl.diagnose(filteredSpectrum);
 
+    if(agentConfigs.getIRFLCombiner() != null) {
+      // TODO, compute IRFL ranking and then combine it with SFL ranking according to the method provided in .getIRFLCombiner()
+    }
     return filteredSpectrum;
   }
 }

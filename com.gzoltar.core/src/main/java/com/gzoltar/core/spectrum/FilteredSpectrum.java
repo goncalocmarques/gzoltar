@@ -60,7 +60,7 @@ public class FilteredSpectrum {
 
     this.granularity = configs.getGranularity();
 
-    // TODO, add to agents config IRFL config in order to load statements content and compute its similarity with bug report
+    this.IRFLFilter = configs.getIRFLCombiner() != null;
 
     // === Class level filters ===
 
@@ -251,7 +251,7 @@ public class FilteredSpectrum {
 
       classesContent.put(className, classContent);
     }
-    node.setContent(classesContent.get(className).get(node.getLineNumber()));
+    node.setContent(classesContent.get(className).get(node.getLineNumber() - 1));
     return node;
   }
 }
