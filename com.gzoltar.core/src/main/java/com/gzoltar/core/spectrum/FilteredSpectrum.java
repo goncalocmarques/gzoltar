@@ -16,6 +16,7 @@
  */
 package com.gzoltar.core.spectrum;
 
+import com.gzoltar.core.util.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import com.gzoltar.core.AgentConfigs;
 import com.gzoltar.core.instr.Outcome;
@@ -35,6 +36,10 @@ import com.gzoltar.core.runtime.ProbeGroup;
 import com.gzoltar.core.util.ArrayUtils;
 import javassist.Modifier;
 
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.List;
+
 public class FilteredSpectrum {
 
   private final GranularityLevel granularity;
@@ -43,6 +48,10 @@ public class FilteredSpectrum {
 
   private final Filter methodFilter = new Filter();
 
+  private boolean IRFLFilter = false;
+
+  HashMap<String, List<String>> classesContent = new HashMap<>();
+
   /**
    * 
    * @param source
@@ -50,6 +59,8 @@ public class FilteredSpectrum {
   public FilteredSpectrum(AgentConfigs configs) {
 
     this.granularity = configs.getGranularity();
+
+    // TODO, add to agents config IRFL config in order to load statements content and compute its similarity with bug report
 
     // === Class level filters ===
 
@@ -84,7 +95,7 @@ public class FilteredSpectrum {
    * @param source
    * @return
    */
-  public ISpectrum filter(ISpectrum source) {
+  public ISpectrum filter(ISpectrum source) throws FileNotFoundException {
     if (source == null) {
       return null;
     }
@@ -115,8 +126,10 @@ public class FilteredSpectrum {
         }
 
         if (this.granularity == GranularityLevel.LINE) {
+          Node node = IRFLFilter ? addContent(probe) : probe.getNode();
           // register Line probe
-          newProbeGroup.registerProbe(probe.getNode(), probe.getCtBehavior());
+          newProbeGroup.registerProbe(node, probe.getCtBehavior());
+
         } else if (this.granularity == GranularityLevel.CLASS) {
           // register Class probe
           newProbeGroup.registerProbe(probe.getNode(), probe.getCtBehavior());
@@ -221,4 +234,24 @@ public class FilteredSpectrum {
     return filteredSpectrum;
   }
 
+  /**
+   * Only called when node in probe is a statement and IRFL is activated
+   * @param probe
+   */
+  private Node addContent(Probe probe) throws FileNotFoundException {
+    Node node = probe.getNode();
+    String className = probe.getCtBehavior().getDeclaringClass().getName();
+    if (!classesContent.containsKey(className)) {
+      // build file path
+      String classPath = className.replace('.', '/') + ".java";
+      String baseDir = "src/main/java";
+      String filePath = baseDir + "/" + classPath;
+
+      List<String> classContent = FileUtils.loadFileByLine(filePath);
+
+      classesContent.put(className, classContent);
+    }
+    node.setContent(classesContent.get(className).get(node.getLineNumber()));
+    return node;
+  }
 }

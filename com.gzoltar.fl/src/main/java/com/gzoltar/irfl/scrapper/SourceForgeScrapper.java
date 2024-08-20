@@ -16,8 +16,6 @@
  */
 package com.gzoltar.irfl.scrapper;
 
-
-
 import com.gzoltar.irfl.BugReport;
 
 import java.io.IOException;

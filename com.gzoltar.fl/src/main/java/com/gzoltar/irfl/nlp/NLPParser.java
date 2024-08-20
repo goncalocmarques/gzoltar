@@ -16,7 +16,7 @@
  */
 package com.gzoltar.irfl.nlp;
 
-import com.gzoltar.irfl.FileLoader;
+import com.gzoltar.core.util.FileUtils;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
@@ -41,11 +41,11 @@ public class NLPParser {
 
     public NLPParser() {
         try {
-            SEPARATORS.addAll(FileLoader.loadFileByLine(SEPARATORS_PATH));
-            SINGLE_CHAR_OPERATORS.addAll(FileLoader.loadFileByLine(SINGLE_CHAR_OPERATORS_PATH));
-            MULTI_CHAR_OPERATORS.addAll(FileLoader.loadFileByLine(MULTI_CHAR_OPERATORS_PATH));
-            JAVA_KEYWORDS.addAll(FileLoader.loadFileByLine(JAVA_KEYWORDS_PATH));
-            ENGLISH_KEYWORDS.addAll(FileLoader.loadFileByLine(ENGLISH_KEYWORDS_PATH));
+            SEPARATORS.addAll(FileUtils.loadFileByLine(SEPARATORS_PATH));
+            SINGLE_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(SINGLE_CHAR_OPERATORS_PATH));
+            MULTI_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(MULTI_CHAR_OPERATORS_PATH));
+            JAVA_KEYWORDS.addAll(FileUtils.loadFileByLine(JAVA_KEYWORDS_PATH));
+            ENGLISH_KEYWORDS.addAll(FileUtils.loadFileByLine(ENGLISH_KEYWORDS_PATH));
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + e.getMessage());
         }
@@ -153,9 +153,5 @@ public class NLPParser {
             }
         }
         return 0;
-    }
-
-    public static void main(String[] args) {
-        NLPParser parser = new NLPParser();
     }
 }

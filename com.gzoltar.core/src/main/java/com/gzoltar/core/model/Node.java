@@ -42,6 +42,8 @@ public class Node {
 
   private Map<String, Double> suspiciousnessValues = null;
 
+  private String content = "";
+
   /**
    * 
    * @param name
@@ -360,4 +362,11 @@ public class Node {
     return builder.isEquals();
   }
 
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
 }
