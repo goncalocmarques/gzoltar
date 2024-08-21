@@ -244,7 +244,7 @@ public class FilteredSpectrum {
     if (!classesContent.containsKey(className)) {
       // build file path
       String classPath = className.replace('.', '/') + ".java";
-      String baseDir = "src/main/java";
+      String baseDir = System.getProperty("user.dir") + "/src";
       String filePath = baseDir + "/" + classPath;
 
       List<String> classContent = FileUtils.loadFileByLine(filePath);

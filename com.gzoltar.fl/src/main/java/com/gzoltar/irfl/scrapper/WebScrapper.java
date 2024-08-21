@@ -16,20 +16,19 @@
  */
 package com.gzoltar.irfl.scrapper;
 
-
 import com.gzoltar.irfl.BugReport;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public abstract class WebScrapper {
 
-    protected Document doc;
+    protected final Document doc;
 
     public WebScrapper(String url) throws IOException {
         this.doc = Jsoup.connect(url).get();
@@ -38,21 +37,35 @@ public abstract class WebScrapper {
     public abstract BugReport getBugReport() throws IOException;
 
     protected List<String> extractTextById(String id) {
-        return Optional.of(Objects.requireNonNull(Objects.requireNonNull(doc.getElementById(id)).getAllElements().eachText())).orElse(List.of());
+        Element element = doc.getElementById(id);
+        if (element != null) {
+            return element.getAllElements().eachText();
+        }
+        return Collections.emptyList();
     }
 
     protected List<String> extractTextByClass(String className) {
-        return extractTextByClass(className, false);
+        return extractTextByClassInternal(className, false);
     }
 
     protected List<String> extractParagraphsByClass(String className) {
-        return extractTextByClass(className, true);
+        return extractTextByClassInternal(className, true);
     }
 
-    private List<String> extractTextByClass(String className, boolean firstOnly) {
-        return firstOnly ?
-                Objects.requireNonNull(doc.getElementsByClass(className).first()).getAllElements().eachText() :
-                doc.getElementsByClass(className).eachText();
-
+    private List<String> extractTextByClassInternal(String className, boolean firstOnly) {
+        Elements elements = doc.getElementsByClass(className);
+        if (elements.isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (firstOnly) {
+            Element firstElement = elements.first();
+            if (firstElement != null) {
+                return firstElement.getAllElements().eachText();
+            } else {
+                return Collections.emptyList();
+            }
+        } else {
+            return elements.eachText();
+        }
     }
 }

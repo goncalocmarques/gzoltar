@@ -20,11 +20,9 @@ import com.gzoltar.core.util.FileUtils;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
-
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class NLPParser {
     Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
@@ -35,7 +33,21 @@ public class NLPParser {
     private final static String ENGLISH_KEYWORDS_PATH = String.valueOf(NLPParser.class.getResource("nlp/englishWords.txt"));
     private final static Set<String> SEPARATORS = new HashSet<>();
     private final static Set<String> SINGLE_CHAR_OPERATORS = new HashSet<>();
-    private final static Set<String> MULTI_CHAR_OPERATORS = new TreeSet<>(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()));
+    private final static Comparator<String> byLengthDescendingThenAlphabetical = new Comparator<String>() {
+        @Override
+        public int compare(String s1, String s2) {
+            int lengthComparison = Integer.compare(s2.length(), s1.length());
+            if (lengthComparison != 0) {
+                return lengthComparison;
+            } else {
+                return s1.compareTo(s2);
+            }
+        }
+    };
+
+    private final static Set<String> MULTI_CHAR_OPERATORS =
+            new TreeSet<>(byLengthDescendingThenAlphabetical);
+
     private final static Set<String> JAVA_KEYWORDS = new HashSet<>();
     private final static Set<String> ENGLISH_KEYWORDS = new HashSet<>();
 
@@ -51,44 +63,102 @@ public class NLPParser {
         }
     }
 
-    private static final Predicate<String> isKeyword = JAVA_KEYWORDS::contains;
-    private static final Predicate<String> isBlank = String::isBlank;
-    private static final Predicate<String> isImportStatement = s -> s.startsWith("import ");
-    private static final Predicate<String> isPackageStatement = s -> s.startsWith("package ");
-    private static final Predicate<String> isCommentLine = s -> s.startsWith("//") || s.startsWith("/*") || s.startsWith("*");
-    private static final Predicate<String> isSeparator = s -> SEPARATORS.contains(s) || s.equals(".");
-    private static final Predicate<String> isEnglishWord = ENGLISH_KEYWORDS::contains;
-
-    private static final Predicate<String> hasOnlySeparators = s -> {
-        for (char c : s.toCharArray()) {
-            if (!isSeparator.test(String.valueOf(c))) return false;
+    private static final Predicate<String> isKeyword = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return JAVA_KEYWORDS.contains(s);
         }
-        return true;
     };
 
-    private static final Predicate<String> isRelevantStatement = isBlank
-            .or(isImportStatement)
-            .or(isPackageStatement)
-            .or(isCommentLine)
-            .or(hasOnlySeparators)
-            .negate();
+    private static final Predicate<String> isBlank = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return s.trim().isEmpty();
+        }
+    };
+
+    private static final Predicate<String> isImportStatement = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return s.startsWith("import ");
+        }
+    };
+
+    private static final Predicate<String> isPackageStatement = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return s.startsWith("package ");
+        }
+    };
+
+    private static final Predicate<String> isCommentLine = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return s.startsWith("//") || s.startsWith("/*") || s.startsWith("*");
+        }
+    };
+
+    private static final Predicate<String> isSeparator = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return SEPARATORS.contains(s) || s.equals(".");
+        }
+    };
+
+    private static final Predicate<String> isEnglishWord = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return ENGLISH_KEYWORDS.contains(s);
+        }
+    };
+
+    private static final Predicate<String> hasOnlySeparators = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            for (char c : s.toCharArray()) {
+                if (!isSeparator.test(String.valueOf(c))) return false;
+            }
+            return true;
+        }
+    };
+
+    private static final Predicate<String> isRelevantStatement = new Predicate<String>() {
+        @Override
+        public boolean test(String s) {
+            return !isBlank.test(s) &&
+                    !isImportStatement.test(s) &&
+                    !isPackageStatement.test(s) &&
+                    !isCommentLine.test(s) &&
+                    !hasOnlySeparators.test(s);
+        }
+    };
 
     private List<String> filterRelevantLines(List<String> tokens) {
-        return tokens.stream().filter(isRelevantStatement).collect(Collectors.toList());
+        List<String> filteredTokens = new ArrayList<>();
+        for (String token : tokens) {
+            if (isRelevantStatement.test(token)) {
+                filteredTokens.add(token);
+            }
+        }
+        return filteredTokens;
     }
 
     private List<String> filterTokens(List<String> tokens) {
-        return tokens.stream()
-                .map(this::removeLeadingTrailingPunctuation)
-                .filter(isKeyword.negate())
-                .filter(isEnglishWord.negate())
-                .filter(isSeparator.negate())
-                .filter(isBlank.negate())
-                .map(token -> (String) stemmer.stem(token))
-                .filter(isKeyword.negate())
-                .filter(isEnglishWord.negate())
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
+        List<String> filteredTokens = new ArrayList<>();
+        for (String token : tokens) {
+            token = removeLeadingTrailingPunctuation(token);
+            if (!isKeyword.test(token) &&
+                    !isEnglishWord.test(token) &&
+                    !isSeparator.test(token) &&
+                    !isBlank.test(token)) {
+                token = (String) stemmer.stem(token);
+                if (!isKeyword.test(token) &&
+                        !isEnglishWord.test(token)) {
+                    filteredTokens.add(token.toLowerCase());
+                }
+            }
+        }
+        return filteredTokens;
     }
 
     private String removeLeadingTrailingPunctuation(String token) {
@@ -101,8 +171,8 @@ public class NLPParser {
 
         tokens = filterRelevantLines(tokens);
 
-        for(String token : tokens) {
-            tokensToProcess.addAll(List.of(token.split(" ")));
+        for (String token : tokens) {
+            tokensToProcess.addAll(Arrays.asList(token.split(" ")));
         }
 
         for (String token : tokensToProcess) {
@@ -136,7 +206,7 @@ public class NLPParser {
             }
         }
         if (!token.isEmpty()) {
-            processedTokens.addAll(List.of(token.split("\\s+")));
+            processedTokens.addAll(Arrays.asList(token.split("\\s+")));
         }
 
         return processedTokens;
