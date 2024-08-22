@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.scrapper;
+package com.gzoltar.irfl.topicModeling.scrapper;
 
-import com.gzoltar.irfl.BugReport;
+import com.gzoltar.irfl.topicModeling.BugReport;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class ApacheScrapper extends WebScrapper {
+public class GitHubScrapper extends WebScrapper {
 
-    private static final String TITLE_ID = "summary-val";
-    private static final String DESCRIPTION_CLASS = "user-content-block";
+    private static final String TITLE_CLASS = "js-issue-title markdown-title";
+    private static final String DESCRIPTION_CLASS = "user-select-contain";
 
-    public ApacheScrapper(String url) throws IOException {
+    public GitHubScrapper(String url) throws IOException {
         super(url);
     }
 
     @Override
     public BugReport getBugReport() {
-        String title = extractTextById(TITLE_ID).get(0);
+        String title = extractTextByClass(TITLE_CLASS).get(0);
         List<String> description = extractParagraphsByClass(DESCRIPTION_CLASS);
 
         return new BugReport(title, description, doc.location());

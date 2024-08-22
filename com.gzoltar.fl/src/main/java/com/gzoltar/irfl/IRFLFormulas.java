@@ -14,19 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.lda;
+package com.gzoltar.irfl;
 
-import com.gzoltar.irfl.nlp.NLPParser;
-
-public class DocumentFactory {
-    public static Document getDocumentFactory(DocumentType type, NLPParser parser) {
-        switch (type) {
-            case STATEMENT:
-                return new StatementDocument(parser);
-            case BUGREPORT:
-                return new BugReportDocument(parser);
-            default:
-                throw new IllegalArgumentException("Unknown document type: " + type);
-        }
-    }
+public enum IRFLFormulas {
+    // TODO, Implement both ways to compute final ranking
+    AVERAGE(),
+    BORDACOUNT()
 }

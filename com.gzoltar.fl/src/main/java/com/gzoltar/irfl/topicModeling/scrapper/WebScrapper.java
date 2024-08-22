@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.scrapper;
+package com.gzoltar.irfl.topicModeling.scrapper;
 
-import com.gzoltar.irfl.BugReport;
+import com.gzoltar.irfl.topicModeling.BugReport;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

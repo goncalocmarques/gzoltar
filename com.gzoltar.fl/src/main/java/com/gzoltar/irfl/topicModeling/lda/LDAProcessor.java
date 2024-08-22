@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.lda;
+package com.gzoltar.irfl.topicModeling.lda;
 
 import cc.mallet.pipe.*;
 import cc.mallet.topics.ParallelTopicModel;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.TokenSequence;
-import com.gzoltar.irfl.nlp.ProcessedLine;
+import com.gzoltar.irfl.topicModeling.nlp.ProcessedLine;
 
 import java.io.IOException;
 import java.util.ArrayList;

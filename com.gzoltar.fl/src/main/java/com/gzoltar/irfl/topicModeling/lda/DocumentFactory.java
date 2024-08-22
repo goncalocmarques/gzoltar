@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.lda;
+package com.gzoltar.irfl.topicModeling.lda;
 
-public enum DocumentType {
-    STATEMENT(0),
-    BUGREPORT(1);
+import com.gzoltar.irfl.topicModeling.nlp.NLPParser;
 
-    private final int id;
-
-    DocumentType(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
+public class DocumentFactory {
+    public static Document getDocumentFactory(DocumentType type, NLPParser parser) {
+        switch (type) {
+            case STATEMENT:
+                return new StatementDocument(parser);
+            case BUGREPORT:
+                return new BugReportDocument(parser);
+            default:
+                throw new IllegalArgumentException("Unknown document type: " + type);
+        }
     }
 }

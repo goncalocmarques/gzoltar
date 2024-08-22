@@ -14,13 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.lda;
+package com.gzoltar.irfl;
 
-import com.gzoltar.irfl.nlp.ProcessedLine;
+import com.gzoltar.core.spectrum.ISpectrum;
+import com.gzoltar.fl.IFaultLocalization;
+import com.gzoltar.fl.IFormula;
+import com.gzoltar.sfl.SFL;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public interface Document {
-    List<ProcessedLine> createDocuments(Object input) throws IOException;
+public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
+
+    private final SFL<F> sfl;
+    private final List<F> irflFormulas = new ArrayList<F>();
+
+    public IRFL(final List<F> irflFormulas, final List<F> sflFormulas) {
+        sfl = new SFL<>(sflFormulas);
+        this.irflFormulas.addAll(irflFormulas);
+    }
+    @Override
+    public void diagnose(ISpectrum spectrum) {
+        // TODO, combine rankings here
+        // first compute SFL ranking and TopicModeling Ranking and then combine them
+    }
 }

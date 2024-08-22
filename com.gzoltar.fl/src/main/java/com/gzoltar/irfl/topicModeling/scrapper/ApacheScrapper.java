@@ -14,40 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.nlp;
+package com.gzoltar.irfl.topicModeling.scrapper;
 
+import com.gzoltar.irfl.topicModeling.BugReport;
+
+import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-
-public class ProcessedLine {
-    private final String name;
-    private final List<String> tokens;
-
-    public ProcessedLine(String name, List<String> tokens) {
-        this.name = name;
-        this.tokens = tokens;
-    }
 
 
-    public String getName() {
-        return name;
-    }
+public class ApacheScrapper extends WebScrapper {
 
-    public List<String> getTokens() {
-        return tokens;
+    private static final String TITLE_ID = "summary-val";
+    private static final String DESCRIPTION_CLASS = "user-content-block";
+
+    public ApacheScrapper(String url) throws IOException {
+        super(url);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessedLine that = (ProcessedLine) o;
-        return Objects.equals(name, that.name);
-    }
+    public BugReport getBugReport() {
+        String title = extractTextById(TITLE_ID).get(0);
+        List<String> description = extractParagraphsByClass(DESCRIPTION_CLASS);
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+        return new BugReport(title, description, doc.location());
     }
-
 }

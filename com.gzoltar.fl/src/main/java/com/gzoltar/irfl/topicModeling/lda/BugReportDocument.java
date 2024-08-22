@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl.lda;
+package com.gzoltar.irfl.topicModeling.lda;
 
-import com.gzoltar.irfl.BugReport;
-import com.gzoltar.irfl.nlp.NLPParser;
-import com.gzoltar.irfl.nlp.ProcessedLine;
-import com.gzoltar.irfl.scrapper.WebScrapper;
+import com.gzoltar.irfl.topicModeling.BugReport;
+import com.gzoltar.irfl.topicModeling.nlp.NLPParser;
+import com.gzoltar.irfl.topicModeling.nlp.ProcessedLine;
+import com.gzoltar.irfl.topicModeling.scrapper.WebScrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gzoltar.irfl.scrapper.ScrapperType.getScrapperFromUrl;
+import static com.gzoltar.irfl.topicModeling.scrapper.ScrapperType.getScrapperFromUrl;
 
 
 public class BugReportDocument implements Document {
