@@ -35,7 +35,16 @@ public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
     }
     @Override
     public void diagnose(ISpectrum spectrum) {
+        sfl.diagnose(spectrum);
         // TODO, combine rankings here
-        // first compute SFL ranking and TopicModeling Ranking and then combine them
+        // call method that executes Topic Modeling and then call compute
     }
+
+    public void compute(ISpectrum spectrum) {
+        for (F formula : irflFormulas) {
+            formula.diagnose(spectrum);
+        }
+    }
+
+
 }

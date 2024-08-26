@@ -14,10 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License along with GZoltar. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.gzoltar.irfl;
 
-public enum IRFLFormulas {
-    // TODO, Implement both ways to compute final ranking
-    AVERAGE(),
-    BORDACOUNT()
+package com.gzoltar.irfl.formulas;
+
+import com.gzoltar.core.spectrum.ISpectrum;
+import com.gzoltar.fl.IFormula;
+
+import java.util.List;
+
+public abstract class AbstractIRFLCombiner implements IRFLCombiner {
+
+    /**
+     * {@inheritDoc}
+     */
+    public void diagnose(final ISpectrum spectrum) {
+        this.combine(spectrum);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract String getName();
+
 }
