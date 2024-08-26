@@ -16,8 +16,21 @@
  */
 package com.gzoltar.irfl;
 
+import com.gzoltar.irfl.formulas.AverageCombiner;
+import com.gzoltar.irfl.formulas.BordaCountCombiner;
+import com.gzoltar.irfl.formulas.IRFLCombiner;
+
 public enum IRFLCombiners {
-    // TODO, Implement both ways to compute final ranking
-    AVERAGE(),
-    BORDACOUNT()
+    AVERAGE(new AverageCombiner()),
+    BORDACOUNT(new BordaCountCombiner());
+
+    private final IRFLCombiner combiner;
+
+    private IRFLCombiners(final IRFLCombiner combiner) {
+        this.combiner = combiner;
+    }
+
+    public IRFLCombiner getCombiner() {
+        return this.combiner;
+    }
 }
