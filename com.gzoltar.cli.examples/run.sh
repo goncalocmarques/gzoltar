@@ -190,7 +190,7 @@ java -cp $BUILD_DIR:$JUNIT_JAR:$HAMCREST_JAR:$GZOLTAR_CLI_JAR \
     --formula "ochiai" \
     --metric "entropy" \
     --irfl "avg" \
-    --bugreport "safadsfs" \
+    --bugreport "https://github.com/mockito/mockito/issues/128" \
     --formatter "txt" || die "Generation of fault-localization report has failed!"
 
 [ -s "$SPECTRA_FILE" ] || die "$SPECTRA_FILE does not exist or it is empty!"

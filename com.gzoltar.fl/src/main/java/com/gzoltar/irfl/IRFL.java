@@ -52,7 +52,7 @@ public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
     public void diagnose(ISpectrum spectrum) throws IOException {
         sfl.diagnose(spectrum); // spectrum based fault localization formulas
         computeSimilarity(spectrum); // Topic Modeling step
-        this.compute(spectrum); // combine both
+        this.compute(spectrum);
     }
 
     private void computeSimilarity(ISpectrum spectrum) throws IOException {

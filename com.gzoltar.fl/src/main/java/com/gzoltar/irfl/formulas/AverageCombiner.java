@@ -39,8 +39,13 @@ public final class AverageCombiner extends AbstractIRFLCombiner {
              for(Probe probe : g.getProbes()) {
                  Node node = probe.getNode();
                  if(node.getNodeType() != NodeType.LINE) continue; // Topic Modeling only computes the similarity of each line with the bug report
+                 double irflSuspiciouness;
+                 try {
+                     irflSuspiciouness = node.getSuspiciousnessValue("Topic Modeling");
+                 } catch (Exception e) {
+                     continue;
+                 }
 
-                 double irflSuspiciouness = node.getSuspiciousnessValue("Topic Modeling");
                  Map<String, Double> map = new HashMap<>();
 
                  for(Map.Entry<String, Double> entry : node.getSuspiciousnessValues().entrySet()) {

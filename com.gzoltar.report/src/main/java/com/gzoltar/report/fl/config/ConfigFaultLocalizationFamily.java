@@ -60,6 +60,7 @@ public class ConfigFaultLocalizationFamily {
     this.formulas = new ArrayList<IFormula>();
     for (String formula : formulas) {
       switch (this.faultLocalizationFamily) {
+        case IRFL:
         case SFL:
           this.formulas.add(SFLFormulas.valueOf(formula.toUpperCase(Locale.ENGLISH)).getFormula());
           break;
