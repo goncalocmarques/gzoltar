@@ -60,14 +60,7 @@ public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
 
         Document statementFactory = DocumentFactory.getDocumentFactory(DocumentType.STATEMENT, parser);
 
-        List<Node> nodes = new ArrayList<>();
-        for(ProbeGroup probeGroup : spectrum.getProbeGroups()) {
-            for(Probe probe : probeGroup.getProbes()) {
-                Node node = probe.getNode();
-                if(node.getNodeType() != NodeType.LINE) continue;
-                nodes.add(node);
-            }
-        }
+        List<Node> nodes = spectrum.getNodes();
 
         List<ProcessedLine> processedSourceFile = statementFactory.createDocuments(nodes);
         Document bugReportFactory = DocumentFactory.getDocumentFactory(DocumentType.BUGREPORT, parser);
