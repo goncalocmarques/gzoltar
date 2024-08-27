@@ -19,18 +19,20 @@ package com.gzoltar.irfl.topicModeling.nlp;
 import com.gzoltar.core.util.FileUtils;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
+import org.apache.commons.io.IOUtils;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class NLPParser {
     Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
-    private final static String SEPARATORS_PATH = String.valueOf(NLPParser.class.getResource("nlp/separators.txt"));
-    private final static String SINGLE_CHAR_OPERATORS_PATH = String.valueOf(NLPParser.class.getResource("nlp/singleCharOperators.txt"));
-    private final static String MULTI_CHAR_OPERATORS_PATH = String.valueOf(NLPParser.class.getResource("nlp/multiCharOperators.txt"));
-    private final static String JAVA_KEYWORDS_PATH = String.valueOf(NLPParser.class.getResource("nlp/keywords.txt"));
-    private final static String ENGLISH_KEYWORDS_PATH = String.valueOf(NLPParser.class.getResource("nlp/englishWords.txt"));
+    private final InputStream SEPARATORS_PATH = this.getClass().getResourceAsStream("/separators.txt");
+    private final InputStream SINGLE_CHAR_OPERATORS_PATH = this.getClass().getResourceAsStream("/singleCharOperators.txt");
+    private final InputStream MULTI_CHAR_OPERATORS_PATH =  this.getClass().getResourceAsStream("/multiCharOperators.txt");
+    private final InputStream JAVA_KEYWORDS_PATH = this.getClass().getResourceAsStream("/keywords.txt");
+    private final InputStream ENGLISH_KEYWORDS_PATH = this.getClass().getResourceAsStream("/englishWords.txt");
     private final static Set<String> SEPARATORS = new HashSet<>();
     private final static Set<String> SINGLE_CHAR_OPERATORS = new HashSet<>();
     private final static Comparator<String> byLengthDescendingThenAlphabetical = new Comparator<String>() {
@@ -52,15 +54,11 @@ public class NLPParser {
     private final static Set<String> ENGLISH_KEYWORDS = new HashSet<>();
 
     public NLPParser() {
-        try {
-            SEPARATORS.addAll(FileUtils.loadFileByLine(SEPARATORS_PATH));
-            SINGLE_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(SINGLE_CHAR_OPERATORS_PATH));
-            MULTI_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(MULTI_CHAR_OPERATORS_PATH));
-            JAVA_KEYWORDS.addAll(FileUtils.loadFileByLine(JAVA_KEYWORDS_PATH));
-            ENGLISH_KEYWORDS.addAll(FileUtils.loadFileByLine(ENGLISH_KEYWORDS_PATH));
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
-        }
+        SEPARATORS.addAll(FileUtils.loadFileByLine(SEPARATORS_PATH));
+        SINGLE_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(SINGLE_CHAR_OPERATORS_PATH));
+        MULTI_CHAR_OPERATORS.addAll(FileUtils.loadFileByLine(MULTI_CHAR_OPERATORS_PATH));
+        JAVA_KEYWORDS.addAll(FileUtils.loadFileByLine(JAVA_KEYWORDS_PATH));
+        ENGLISH_KEYWORDS.addAll(FileUtils.loadFileByLine(ENGLISH_KEYWORDS_PATH));
     }
 
     private static final Predicate<String> isKeyword = new Predicate<String>() {

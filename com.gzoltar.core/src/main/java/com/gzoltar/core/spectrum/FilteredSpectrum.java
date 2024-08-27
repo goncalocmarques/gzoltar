@@ -36,7 +36,8 @@ import com.gzoltar.core.runtime.ProbeGroup;
 import com.gzoltar.core.util.ArrayUtils;
 import javassist.Modifier;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class FilteredSpectrum {
    * @param source
    * @return
    */
-  public ISpectrum filter(ISpectrum source) throws FileNotFoundException {
+  public ISpectrum filter(ISpectrum source) throws IOException {
     if (source == null) {
       return null;
     }
@@ -238,7 +239,7 @@ public class FilteredSpectrum {
    * Only called when node in probe is a statement and IRFL is activated
    * @param probe
    */
-  private Node addContent(Probe probe) throws FileNotFoundException {
+  private Node addContent(Probe probe) throws IOException {
     Node node = probe.getNode();
     String className = probe.getCtBehavior().getDeclaringClass().getName();
     if (!classesContent.containsKey(className)) {
@@ -246,8 +247,9 @@ public class FilteredSpectrum {
       String classPath = className.replace('.', '/') + ".java";
       String baseDir = System.getProperty("user.dir") + "/src";
       String filePath = baseDir + "/" + classPath;
-
-      List<String> classContent = FileUtils.loadFileByLine(filePath);
+      File file = new File(filePath);
+      InputStream inputStream = Files.newInputStream(file.toPath());
+      List<String> classContent = FileUtils.loadFileByLine(inputStream);
 
       classesContent.put(className, classContent);
     }

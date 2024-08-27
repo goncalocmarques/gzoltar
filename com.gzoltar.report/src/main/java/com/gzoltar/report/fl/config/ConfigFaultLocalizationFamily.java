@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import com.gzoltar.fl.FaultLocalizationFamily;
 import com.gzoltar.fl.IFormula;
+import com.gzoltar.irfl.IRFLCombiners;
 import com.gzoltar.report.IReportFormatter;
 import com.gzoltar.report.metrics.IMetric;
 import com.gzoltar.report.metrics.Metric;
@@ -31,6 +32,8 @@ public class ConfigFaultLocalizationFamily {
   private FaultLocalizationFamily faultLocalizationFamily;
 
   private List<IFormula> formulas;
+
+  private List<IFormula> combiners;
 
   private List<IMetric> metrics;
 
@@ -64,8 +67,23 @@ public class ConfigFaultLocalizationFamily {
     }
   }
 
+  public void setCombiners(List<String> formulas) {
+    this.combiners = new ArrayList<IFormula>();
+    for (String formula : formulas) {
+      switch (this.faultLocalizationFamily) {
+        case IRFL:
+          this.combiners.add(IRFLCombiners.valueOf(formula.toUpperCase(Locale.ENGLISH)).getCombiner());
+          break;
+      }
+    }
+  }
+
   public List<IFormula> getFormulas() {
     return this.formulas;
+  }
+
+  public List<IFormula> getCombiners() {
+    return this.combiners;
   }
 
   public boolean hasFormulas() {

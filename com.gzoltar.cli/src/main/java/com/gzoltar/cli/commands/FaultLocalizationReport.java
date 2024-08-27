@@ -123,6 +123,8 @@ public class FaultLocalizationReport extends AbstractReport {
             FaultLocalizationFamily.valueOf(this.family.toUpperCase(locale)));
     // set formula
     configFlFamily.setFormulas(Arrays.asList(this.formula.split("\\:")));
+    // set combiners
+    configFlFamily.setCombiners(Arrays.asList(this.irfl.split("\\:")));
     // set metrics
     configFlFamily.setMetrics(Arrays.asList(this.metric.split("\\:")));
     // set formatters

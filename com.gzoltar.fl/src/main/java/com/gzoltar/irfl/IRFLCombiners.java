@@ -21,7 +21,7 @@ import com.gzoltar.irfl.formulas.BordaCountCombiner;
 import com.gzoltar.irfl.formulas.IRFLCombiner;
 
 public enum IRFLCombiners {
-    AVERAGE(new AverageCombiner()),
+    AVG(new AverageCombiner()),
     BORDACOUNT(new BordaCountCombiner());
 
     private final IRFLCombiner combiner;

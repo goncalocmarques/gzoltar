@@ -54,7 +54,7 @@ public class FaultLocalizationReportBuilder {
 
       // first diagnose it
       FaultLocalization fl =
-          new FaultLocalization(flFamily.getFaultLocalizationFamily(), flFamily.getFormulas());
+          new FaultLocalization(flFamily.getFaultLocalizationFamily(), flFamily.getFormulas(), flFamily.getCombiners(), agentConfigs.getBugReport());
       ISpectrum spectrum = fl.diagnose(buildLocation, agentConfigs, dataFile);
 
       // which formatter of report?

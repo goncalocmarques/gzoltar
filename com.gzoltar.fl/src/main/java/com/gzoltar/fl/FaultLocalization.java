@@ -23,6 +23,7 @@ import com.gzoltar.core.AgentConfigs;
 import com.gzoltar.core.spectrum.FilteredSpectrum;
 import com.gzoltar.core.spectrum.ISpectrum;
 import com.gzoltar.core.spectrum.SpectrumReader;
+import com.gzoltar.irfl.IRFL;
 import com.gzoltar.sfl.SFL;
 
 public class FaultLocalization {
@@ -32,14 +33,20 @@ public class FaultLocalization {
   /**
    * 
    * @param flFamily
-   * @param formulas
+   * @param SFLformulas
+   * @param IRFLformulas
+   * @param bugReportURL
    */
-  public FaultLocalization(final FaultLocalizationFamily flFamily, final List<IFormula> formulas) {
+  public FaultLocalization(final FaultLocalizationFamily flFamily, final List<IFormula> SFLformulas, final List<IFormula> IRFLformulas, final String bugReportURL) {
     switch (flFamily) {
+      case IRFL:
+        this.fl = new IRFL<IFormula>(IRFLformulas, SFLformulas, bugReportURL);
+        break;
       case SFL:
       default:
-        this.fl = new SFL<IFormula>(formulas);
+        this.fl = new SFL<IFormula>(SFLformulas);
         break;
+
     }
   }
 
@@ -65,9 +72,6 @@ public class FaultLocalization {
 
     this.fl.diagnose(filteredSpectrum);
 
-    if(agentConfigs.getIRFLCombiner() != null) {
-      // TODO, compute IRFL ranking and then combine it with SFL ranking according to the method provided in .getIRFLCombiner()
-    }
     return filteredSpectrum;
   }
 }
