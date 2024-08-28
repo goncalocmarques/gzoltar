@@ -32,4 +32,10 @@ public interface IFormula {
    * @return
    */
   public String getName();
+
+  /**
+   * Returns the formula description
+   * @return
+   */
+  public String getDescription();
 }

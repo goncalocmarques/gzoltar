@@ -69,4 +69,9 @@ public abstract class AbstractSFLFormula implements ISFLFormula {
    */
   public abstract double compute(final double n00, final double n01, final double n10,
       final double n11);
+
+  @Override
+  public String getDescription() {
+    return "";
+  }
 }

@@ -186,7 +186,7 @@ java -cp $BUILD_DIR:$JUNIT_JAR:$HAMCREST_JAR:$GZOLTAR_CLI_JAR \
     --inclDeprecatedMethods \
     --dataFile "$SER_FILE" \
     --outputDirectory "$BUILD_DIR" \
-    --family "irfl" \
+    --family "sfl" \
     --formula "ochiai" \
     --metric "entropy" \
     --irfl "avg" \

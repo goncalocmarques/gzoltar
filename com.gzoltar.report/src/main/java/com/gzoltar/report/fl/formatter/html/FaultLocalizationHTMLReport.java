@@ -43,7 +43,7 @@ public class FaultLocalizationHTMLReport extends AbstractHTMLReport {
    */
   @Override
   public void generateFaultLocalizationReport(final File outputDirectory, final ISpectrum spectrum,
-      final List<IFormula> formulas) throws IOException {
+      final List<IFormula> formulas, List<IFormula> combiners) throws IOException {
     for (IFormula formula : formulas) {
       // for each formula creates a directory with a HTML report
 

@@ -37,8 +37,8 @@ public class FaultLocalizationReport extends AbstractFaultLocalizationReport {
    * @param reportFormatter
    */
   public FaultLocalizationReport(final File outputDirectory, final List<IMetric> metrics,
-      final List<IFormula> formulas, final IFaultLocalizationReportFormatter reportFormatter) {
-    super(outputDirectory, metrics, formulas);
+      final List<IFormula> formulas, List<IFormula> combiners, final IFaultLocalizationReportFormatter reportFormatter) {
+    super(outputDirectory, metrics, formulas, combiners);
     this.reportFormatter = reportFormatter;
   }
 
@@ -48,7 +48,7 @@ public class FaultLocalizationReport extends AbstractFaultLocalizationReport {
   public void generateReport(final ISpectrum spectrum) throws IOException {
     // generate txt/html report
     this.reportFormatter.generateFaultLocalizationReport(this.getOutputDirectory(), spectrum,
-        this.getFormulas());
+        this.getFormulas(), this.getCombiners());
 
     // apart from providing a fault localization report in here a text-based metrics report is also
     // generated

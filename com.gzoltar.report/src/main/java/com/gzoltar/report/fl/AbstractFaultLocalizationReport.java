@@ -26,6 +26,7 @@ public abstract class AbstractFaultLocalizationReport extends AbstractReport
     implements IFaultLocalizationReport {
 
   private final List<IFormula> formulas;
+  private final List<IFormula> combiners;
 
   /**
    * 
@@ -33,9 +34,10 @@ public abstract class AbstractFaultLocalizationReport extends AbstractReport
    * @param formulas
    */
   protected AbstractFaultLocalizationReport(final File outputDirectory, final List<IMetric> metrics,
-      final List<IFormula> formulas) {
+      final List<IFormula> formulas, final List<IFormula> combiners) {
     super(outputDirectory, metrics);
     this.formulas = formulas;
+    this.combiners = combiners;
   }
 
   /**
@@ -44,4 +46,6 @@ public abstract class AbstractFaultLocalizationReport extends AbstractReport
   public List<IFormula> getFormulas() {
     return this.formulas;
   }
+
+  public List<IFormula> getCombiners() { return this.combiners; }
 }

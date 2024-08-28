@@ -56,4 +56,8 @@ public final class BordaCountCombiner extends AbstractIRFLCombiner {
             }
         }
     }
+
+    public String getDescription() {
+        return " borda count combination with Topic Modeling";
+    }
 }

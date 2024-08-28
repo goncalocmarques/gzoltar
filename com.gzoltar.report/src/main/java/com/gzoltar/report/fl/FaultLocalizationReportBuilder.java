@@ -76,7 +76,7 @@ public class FaultLocalizationReportBuilder {
 
         // then report it
         FaultLocalizationReport flReport = new FaultLocalizationReport(formatterOutputDirectory,
-            flFamily.getMetrics(), flFamily.getFormulas(), report);
+            flFamily.getMetrics(), flFamily.getFormulas(), flFamily.getCombiners(), report);
         flReport.generateReport(spectrum);
       }
     }

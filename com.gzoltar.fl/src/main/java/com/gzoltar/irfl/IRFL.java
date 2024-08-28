@@ -85,7 +85,6 @@ public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
         for(ProbeGroup probeGroup : spectrum.getProbeGroups()) {
             for(Probe probe : probeGroup.getProbes()) {
                 Node node = probe.getNode();
-                if(node.getNodeType() != NodeType.LINE) continue;
                 if(!suspiciousnessScores.containsKey(node.getNameWithLineNumber())) continue;
                 Double IRFLSuspiciouness = suspiciousnessScores.get(node.getNameWithLineNumber());
                 node.addSuspiciousnessValue("Topic Modeling", IRFLSuspiciouness);

@@ -29,8 +29,9 @@ public interface IFaultLocalizationReportFormatter {
    * @param outputDirectory
    * @param spectrum
    * @param formulas
+   * @param combiners
    * @throws IOException
    */
   public void generateFaultLocalizationReport(final File outputDirectory, final ISpectrum spectrum,
-      final List<IFormula> formulas) throws IOException;
+      final List<IFormula> formulas, final List<IFormula> combiners) throws IOException;
 }

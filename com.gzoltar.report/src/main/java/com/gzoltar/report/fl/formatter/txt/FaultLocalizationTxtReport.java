@@ -16,14 +16,11 @@
  */
 package com.gzoltar.report.fl.formatter.txt;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+
 import com.gzoltar.core.model.Node;
+import com.gzoltar.core.model.NodeType;
 import com.gzoltar.core.model.Transaction;
 import com.gzoltar.core.model.TransactionOutcome;
 import com.gzoltar.core.runtime.Probe;
@@ -47,7 +44,7 @@ public class FaultLocalizationTxtReport implements IFaultLocalizationReportForma
    */
   @Override
   public void generateFaultLocalizationReport(final File outputDirectory, final ISpectrum spectrum,
-      final List<IFormula> formulas) throws IOException {
+      final List<IFormula> formulas, final List<IFormula> combiners) throws IOException {
     if (!outputDirectory.exists()) {
       outputDirectory.mkdirs();
     }
@@ -111,30 +108,19 @@ public class FaultLocalizationTxtReport implements IFaultLocalizationReportForma
      */
 
     List<Node> nodes = new ArrayList<Node>(spectrum.getNodes());
-    for (final IFormula formula : formulas) {
-
-      PrintWriter formulaWriter = new PrintWriter(outputDirectory + File.separator
-          + formula.getName().toLowerCase() + RANKING_EXTENSION_NAME, "UTF-8");
-
-      // header
-      formulaWriter.println("name;suspiciousness_value");
-
-      // sort (DESC) nodes by their suspiciousness value
-      Collections.sort(nodes, new Comparator<Node>() {
-        @Override
-        public int compare(Node node0, Node node1) {
-          return Double.compare(node1.getSuspiciousnessValue(formula.getName()),
-              node0.getSuspiciousnessValue(formula.getName()));
-        }
-      });
-
+    if(!combiners.isEmpty()) {
+      List<Node> onlyStatementNodes = new ArrayList<>();
       for (Node node : nodes) {
-        formulaWriter.println(
-            node.getNameWithLineNumber() + ";" + node.getSuspiciousnessValue(formula.getName()));
+        if(node.getNodeType() == NodeType.LINE) onlyStatementNodes.add(node);
       }
-
-      formulaWriter.close();
+      for (final IFormula combiner : combiners) {
+        printRanking(formulas, onlyStatementNodes, outputDirectory, combiner.getDescription());
+      }
     }
+    else {
+      printRanking(formulas, nodes, outputDirectory, "");
+    }
+
 
     /**
      * Print 'tests'
@@ -155,5 +141,39 @@ public class FaultLocalizationTxtReport implements IFaultLocalizationReportForma
     }
 
     testsWriter.close();
+  }
+
+  private void printRanking(List<IFormula> formulas, List<Node> nodes, File outputDirectory, final String suffix) throws FileNotFoundException, UnsupportedEncodingException {
+    for (final IFormula formula : formulas) {
+      final String formulaName = formula.getName() + (suffix != null ? suffix : "");
+      PrintWriter formulaWriter = new PrintWriter(outputDirectory + File.separator
+              + formulaName.toLowerCase() + RANKING_EXTENSION_NAME, "UTF-8");
+
+      // header
+      formulaWriter.println("name;suspiciousness_value");
+      System.out.println(formulaName);
+      for(Node node : nodes) {
+        System.out.println(node.getNameWithLineNumber());
+        System.out.println(node.getSuspiciousnessValues());
+        System.out.println(node.getNodeType());
+        System.out.println(" ");
+
+      }
+      // sort (DESC) nodes by their suspiciousness value
+      Collections.sort(nodes, new Comparator<Node>() {
+        @Override
+        public int compare(Node node0, Node node1) {
+          return Double.compare(node1.getSuspiciousnessValue(formulaName) != null ? node1.getSuspiciousnessValue(formulaName) : 0,
+                  node0.getSuspiciousnessValue(formulaName) != null ? node0.getSuspiciousnessValue(formulaName) : 0);
+        }
+      });
+
+      for (Node node : nodes) {
+        formulaWriter.println(
+                node.getNameWithLineNumber() + ";" + node.getSuspiciousnessValue(formulaName) != null ? node.getSuspiciousnessValue(formulaName) : 0);
+      }
+
+      formulaWriter.close();
+    }
   }
 }

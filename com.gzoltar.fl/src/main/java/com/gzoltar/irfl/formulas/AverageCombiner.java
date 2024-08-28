@@ -50,7 +50,7 @@ public final class AverageCombiner extends AbstractIRFLCombiner {
 
                  for(Map.Entry<String, Double> entry : node.getSuspiciousnessValues().entrySet()) {
                      if(Objects.equals(entry.getKey(), "Topic Modeling")) continue;
-                     map.put(entry.getKey() + "average combination with Topic Modeling", (entry.getValue() + irflSuspiciouness) / 2);
+                     map.put(entry.getKey() + " average combination with Topic Modeling", (entry.getValue() + irflSuspiciouness) / 2);
                  }
 
                  // in order to avoid iterating over a map while adding elements to it
@@ -59,5 +59,9 @@ public final class AverageCombiner extends AbstractIRFLCombiner {
                  }
              }
          }
+     }
+
+     public String getDescription() {
+         return " average combination with Topic Modeling";
      }
 }
