@@ -23,10 +23,7 @@ import com.gzoltar.core.runtime.ProbeGroup;
 import com.gzoltar.core.spectrum.ISpectrum;
 import com.gzoltar.fl.IFaultLocalization;
 import com.gzoltar.fl.IFormula;
-import com.gzoltar.irfl.topicModeling.lda.Document;
-import com.gzoltar.irfl.topicModeling.lda.DocumentFactory;
-import com.gzoltar.irfl.topicModeling.lda.DocumentType;
-import com.gzoltar.irfl.topicModeling.lda.LDAProcessor;
+import com.gzoltar.irfl.topicModeling.lda.*;
 import com.gzoltar.irfl.topicModeling.nlp.NLPParser;
 import com.gzoltar.irfl.topicModeling.nlp.ProcessedLine;
 import com.gzoltar.sfl.SFL;
@@ -58,13 +55,13 @@ public class IRFL<F extends IFormula> implements IFaultLocalization<F> {
     private void computeSimilarity(ISpectrum spectrum) throws IOException {
         NLPParser parser = new NLPParser();
 
-        Document statementFactory = DocumentFactory.getDocumentFactory(DocumentType.STATEMENT, parser);
+        Document statementFactory = new StatementDocument(parser);
 
         List<Node> nodes = spectrum.getNodes();
 
         List<ProcessedLine> processedSourceFile = statementFactory.createDocuments(nodes);
-        Document bugReportFactory = DocumentFactory.getDocumentFactory(DocumentType.BUGREPORT, parser);
-        List<ProcessedLine> processedBugReport = bugReportFactory.createDocuments(bugReportUrl);
+        Document bugReport = new BugReportDocument(parser);
+        List<ProcessedLine> processedBugReport = bugReport.createDocuments(bugReportUrl);
         List<ProcessedLine> allProcessedLines = new ArrayList<>(processedSourceFile);
         allProcessedLines.addAll(processedBugReport);
 
